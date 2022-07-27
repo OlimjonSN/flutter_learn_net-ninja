@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:world_time_app/service/world_time.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -11,15 +12,16 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  String time = 'loading page';
   void setupWordTime() async {
     WorldTime instance = WorldTime(
-        location: 'Uzbekiston', flag: "uzbekiston.png", url: 'Asia/Tashkent');
+        location: 'England', flag: "uzbekiston.png", url: 'Europe/London');
 
     await instance.getTime();
-    print(instance.time);
-    setState(() {
-      time = instance.time as String;
+    Navigator.pushReplacementNamed(context, '/home', arguments: {
+      'location': instance.location,
+      'flag': instance.flag,
+      'time': instance.time,
+      'isDaytime': instance.isDaytime
     });
   }
 
@@ -31,10 +33,13 @@ class _LoadingState extends State<Loading> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(50.0),
-      child: Text(time),
-    ));
+    return const SafeArea(
+      child: Scaffold(
+          backgroundColor: Colors.blue,
+          body: SpinKitFadingCircle(
+            color: Colors.white,
+            size: 50.0,
+          )),
+    );
   }
 }
